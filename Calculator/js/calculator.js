@@ -163,7 +163,18 @@ function calculator(button){
     else if(button.type == "calculate"){
         let join_result = data.result.join('');
 
-        let result = eval(join_result);
+        let result
+        try{
+            result = eval(join_result);
+        } catch (error){
+            if(error instanceof SyntaxError){
+                result = "Syntax Error!";
+                updateOutputResult(result);
+                return;
+            }
+        }
+        
+        result = formatResult(result);
 
         updateOutputResult(result);
 
@@ -184,4 +195,42 @@ function updateOutputOperation(operation){
 
 function updateOutputResult(result){
     output_result_element.innerHTML = result;
+}
+
+//Dar formato al resultado
+function formatResult(result){
+    const maxOutputNumberLength = 10;
+    const outputPrecision = 5;
+
+    if(digitcounter(result) > maxOutputNumberLength){
+        if(isFloat(result)){
+            const resultInt = parseInt(result);
+            const resultIntLength = digitCounter(resultInt);
+
+            if(resultIntLength > maxOutputNumberLength){
+                return result.toPrecision(outputPrecision);
+            }
+            else{
+                const numOfDigitsAfterPoint = maxOutputNumberLength - resultIntLength;
+                return result.toFixed(numOfDigitsAfterPoint)
+            }
+        }
+        else{
+            //si el numero fuese entero
+            return result.toPrecision(outputPrecision);
+        }
+    }
+    else{
+        return result;
+    }
+}
+
+//Contador de digitos
+function digitcounter(number){
+    return number.toString().length;
+}
+
+//Un numero es float o no?
+function isFloat(number){
+    return number % 1 != 0;
 }
