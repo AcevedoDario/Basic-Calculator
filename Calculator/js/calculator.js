@@ -59,7 +59,7 @@ let calculator_buttons = [
         symbol : "+",
         formula : "+",
         type : "operator"
-    },,{
+    },{
         name : "1",
         symbol : 1,
         formula : 1,
